@@ -7,7 +7,8 @@
     "root": "src/content/blog"
   },
   "themeConfig": [
-    "astro.config.mjs"
+    "astro.config.mjs",
+    ".sitepins/config.json"
   ],
   "arrangement": [],
   "showCommitModal": false
