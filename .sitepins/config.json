@@ -1,0 +1,12 @@
+{
+  "media": {
+    "root": "src/assets",
+    "public": "src/"
+  },
+  "content": {
+    "root": "src/content/blog"
+  },
+  "themeConfig": [],
+  "arrangement": [],
+  "showCommitModal": false
+}
