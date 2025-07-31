@@ -4,7 +4,7 @@
     "public": "src/"
   },
   "content": {
-    "root": "src/content/team"
+    "root": "src/content/blog"
   },
   "themeConfig": [
     "astro.config.mjs"
