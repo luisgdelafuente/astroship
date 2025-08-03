@@ -17,7 +17,7 @@ tags:
   - tailwindcss
   - frontend
 ---
-Lorem ipsum dolor sit amet consectetur adipiscing elit euismod rutrum, consequat fringilla ultricies nullam curae mollis semper conubia viverra, orci aenean dapibus pharetra nec tortor tellus cubilia. 
+Lorem ipsum dolor sit amet consectetur adipiscing elit euismod rutrum, consequat fringilla ultricies nullam curae mollis semper conubia viverra, orci aenean dapibus pharetra nec tortor tellus cubilia.
 
 | Cabecera 1 | Cabecera 2 |
 | ---------- | ---------- |
