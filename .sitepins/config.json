@@ -6,7 +6,11 @@
   "content": {
     "root": "src/content"
   },
-  "themeConfig": [],
+  "themeConfig": [
+    "tsconfig.json",
+    "astro.config.mjs",
+    ".sitepins/config.json"
+  ],
   "arrangement": [],
   "showCommitModal": false
 }
