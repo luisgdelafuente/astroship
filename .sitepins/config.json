@@ -4,7 +4,7 @@
     "public": "./"
   },
   "content": {
-    "root": "src/content"
+    "root": "src"
   },
   "themeConfig": [
     "tsconfig.json",
