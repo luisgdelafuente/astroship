@@ -1,0 +1,140 @@
+---
+import { getCollection } from "astro:content";
+import { Picture } from "astro:assets";
+import Layout from "@/layouts/Layout.astro";
+import Container from "@/components/container.astro";
+import Sectionhead from "@/components/sectionhead.astro";
+
+export async function getStaticPaths() {
+  const PAGE_SIZE = 5;
+  const publishedBlogEntries = await getCollection("blog", ({ data }) => {
+    return !data.draft && data.publishDate < new Date();
+  });
+  const totalPages = Math.ceil(publishedBlogEntries.length / PAGE_SIZE);
+  // Generate paths for /blog/2/, /blog/3/, etc. (skip /blog/1/)
+  return Array.from({ length: totalPages - 1 }, (_, i) => ({
+    params: { page: String(i + 2) }
+  }));
+}
+
+const PAGE_SIZE = 5;
+const { page } = Astro.params;
+const currentPage = Array.isArray(page) ? Number(page[0]) : Number(page) || 1;
+
+const publishedBlogEntries = await getCollection("blog", ({ data }) => {
+  return !data.draft && data.publishDate < new Date();
+});
+
+publishedBlogEntries.sort(function (a, b) {
+  return b.data.publishDate.valueOf() - a.data.publishDate.valueOf();
+});
+
+const totalPosts = publishedBlogEntries.length;
+const totalPages = Math.ceil(totalPosts / PAGE_SIZE);
+const paginatedPosts = publishedBlogEntries.slice(
+  (currentPage - 1) * PAGE_SIZE,
+  currentPage * PAGE_SIZE
+);
+
+// Redirect /blog/1/ to /blog/
+if (currentPage === 1 && Astro.request.url.endsWith('/1/')) {
+  return Astro.redirect('/blog/', 301);
+}
+---
+
+<Layout title="Blog">
+  <Container>
+    <Sectionhead>
+      <Fragment slot="title">Our Blog</Fragment>
+      <Fragment slot="desc">
+        We write about building startups and thoughts going on our mind.
+      </Fragment>
+    </Sectionhead>
+    <main class="mt-16">
+      <ul class="grid gap-16 max-w-4xl mx-auto">
+        {
+          paginatedPosts.map((blogPostEntry, index) => (
+            <li>
+              <a href={`/blog/${blogPostEntry.slug}`}>
+                <div class="grid md:grid-cols-2 gap-5 md:gap-10 items-center">
+                  <Picture
+                    src={blogPostEntry.data.image.src}
+                    alt={blogPostEntry.data.image.alt}
+                    sizes="(max-width: 800px) 100vw, 800px"
+                    width={800}
+                    height={600}
+                    loading={index <= 2 ? "eager" : "lazy"}
+                    decoding={index <= 2 ? "sync" : "async"}
+                    class="w-full rounded-md object-cover object-center bg-white"
+                  />
+                  <div>
+                    <span class="text-blue-400 uppercase tracking-wider text-sm font-medium">
+                      {blogPostEntry.data.category}
+                    </span>
+
+                    <h2 class="text-3xl font-semibold leading-snug tracking-tight mt-1 ">
+                      {blogPostEntry.data.title}
+                    </h2>
+
+                    <div class="flex gap-2 mt-3">
+                      <span class="text-gray-400">
+                        {blogPostEntry.data.author}
+                      </span>
+                      <span class="text-gray-400">• </span>
+                      <time
+                        class="text-gray-400"
+                        datetime={blogPostEntry.data.publishDate.toISOString()}>
+                        {blogPostEntry.data.publishDate.toDateString()}
+                      </time>
+                    </div>
+                  </div>
+                </div>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+      <nav class="flex justify-center mt-12">
+        <ul class="inline-flex -space-x-px items-center">
+          {/* Previous arrow */}
+          <li>
+            <a
+              href={currentPage > 1 ? (currentPage === 2 ? `/blog/` : `/blog/${currentPage - 1}/`) : '#'}
+              aria-disabled={currentPage === 1}
+              class={`px-3 py-2 border border-gray-300 rounded-l-md ${currentPage === 1 ? 'text-gray-300 cursor-not-allowed' : 'text-gray-700 hover:bg-gray-100'}`}
+              tabindex={currentPage === 1 ? -1 : 0}
+            >
+              &lt;
+            </a>
+          </li>
+          {Array.from({ length: totalPages }, (_, i) => (
+            <li>
+              <a
+                href={i === 0 ? `/blog/` : `/blog/${i + 1}/`}
+                class={`px-3 py-2 border border-gray-300 ${
+                  currentPage === i + 1
+                    ? 'bg-gray-200 text-gray-900 border-gray-500 font-bold'
+                    : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
+                }`}
+                aria-current={currentPage === i + 1 ? 'page' : undefined}
+              >
+                {i + 1}
+              </a>
+            </li>
+          ))}
+          {/* Next arrow */}
+          <li>
+            <a
+              href={currentPage < totalPages ? `/blog/${currentPage + 1}/` : '#'}
+              aria-disabled={currentPage === totalPages}
+              class={`px-3 py-2 border border-gray-300 rounded-r-md ${currentPage === totalPages ? 'text-gray-300 cursor-not-allowed' : 'text-gray-700 hover:bg-gray-100'}`}
+              tabindex={currentPage === totalPages ? -1 : 0}
+            >
+              &gt;
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </main>
+  </Container>
+</Layout> 
