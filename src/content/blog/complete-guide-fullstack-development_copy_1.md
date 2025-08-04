@@ -1,6 +1,6 @@
 ---
 draft: false
-title: La Guía Completa para Full Stack Web Development
+title: 'La Guía Completa copia primera '
 snippet: >-
   Ornare cum cursus laoreet sagittis nunc fusce posuere per euismod dis vehicula
   a, semper fames lacus maecenas dictumst pulvinar neque enim non potenti.
